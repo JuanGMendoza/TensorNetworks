@@ -66,7 +66,7 @@ def MPS_to_state(mps):
 #Recursive function made for Function 2
 def recur_matrix_multiply(bucket, M_list_subset, vector):
 
-
+	print(M_list_subset)
 	#Base case: We are at the last M matrix
 	if len(M_list_subset) == 1:
 
@@ -87,10 +87,65 @@ def recur_matrix_multiply(bucket, M_list_subset, vector):
 
 
 #Function 3
-def state_to_MPS(state):
+def state_to_MPS(state, d, L):
 
 	C_matrix = []
+	row_size = np.power(d, L - 1)
+	M_list = []
 
-	r1 = 
+	for i in range(0, int(len(state)/row_size)):
 
-	for 
+		C_matrix.append(state[i * row_size : i * row_size + row_size])
+
+
+	for l in range(0,L):
+
+		M = []
+		
+		U, S, V = np.linalg.svd(C_matrix, full_matrices=True)
+
+		S_matrix = np.identity(len(S))
+
+		j = 0
+		for sing_val in S:
+			S_matrix[j][j] = sing_val
+			j += 1
+		
+		print('U: ', U)
+		print('V: ', V)
+
+		#Slice U
+		rows_per_slice = len(U) // d
+		
+		for i in range(0, d):
+
+			
+			sigma = U[i * rows_per_slice : rows_per_slice + (i * rows_per_slice)]
+			print(sigma)
+			M.append(sigma)
+
+		C_matrix = np.matmul(S_matrix, V)
+		M_list.append(M)
+
+	return M_list
+
+
+state = [1,0,0,1]
+
+MPS = state_to_MPS(state, 2, 2)
+
+print(MPS)
+input()
+#print(MPS_to_state(MPS))
+
+test = [0,1,2,3,4]
+
+print(test[0:4])
+
+
+
+
+
+
+
+
